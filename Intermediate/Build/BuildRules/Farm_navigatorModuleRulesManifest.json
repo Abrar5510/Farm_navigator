@@ -1,0 +1,8 @@
+{
+	"SourceFiles": [
+		"C:\\Unreal\\Farm_navigator\\Source\\Farm_navigator\\Farm_navigator.Build.cs",
+		"C:\\Unreal\\Farm_navigator\\Source\\Farm_navigator.Target.cs",
+		"C:\\Unreal\\Farm_navigator\\Source\\Farm_navigatorEditor.Target.cs"
+	],
+	"EngineVersion": "5.6.1"
+}
