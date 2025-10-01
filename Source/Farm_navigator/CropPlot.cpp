@@ -114,3 +114,92 @@ UFarmingSim* ACropPlot::GetGameInstance() const
 {
     return Cast<UFarmingSim>(GetGameInstance());
 }
+
+void ACropPlot::WaterPlot()
+{
+    bIsWatered = true;
+    
+    // Grant XP for watering
+    AFarmingPlayerState* PlayerState = GetWorld()->GetFirstPlayerController()->GetPlayerState<AFarmingPlayerState>();
+    if (PlayerState)
+    {
+        PlayerState->AddXP(10);
+    }
+}
+
+bool ACropPlot::NeedsWater() const
+{
+    // During disasters, plots need water more frequently
+    UFarmingSim* GameInstance = GetGameInstance();
+    if (GameInstance && GameInstance->DisasterManager)
+    {
+        if (GameInstance->DisasterManager->GetCurrentDisaster() == EDisasterType::Drought)
+        {
+            return true; // Always need water during drought
+        }
+    }
+    
+    return !bIsWatered && HasCrop() && !CanHarvest();
+}
+
+float ACropPlot::GetWaterEffectiveness() const
+{
+    float Effectiveness = 1.0f;
+    
+    UFarmingSim* GameInstance = GetGameInstance();
+    if (GameInstance && GameInstance->DisasterManager)
+    {
+        // During drought, water is less effective
+        if (GameInstance->DisasterManager->GetCurrentDisaster() == EDisasterType::Drought)
+        {
+            Effectiveness *= 0.5f;
+        }
+    }
+    
+    // Apply irrigation skill bonus
+    AFarmingPlayerState* PlayerState = GetWorld()->GetFirstPlayerController()->GetPlayerState<AFarmingPlayerState>();
+    if (PlayerState)
+    {
+        Effectiveness *= PlayerState->GetSkillBonus(EFarmingSkill::Irrigation);
+    }
+    
+    return Effectiveness;
+}
+
+// Modify the Tick function to include disaster effects:
+void ACropPlot::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    if (HasCrop() && !CanHarvest())
+    {
+        float GrowthRate = 1.0f;
+        
+        // Apply disaster effects
+        UFarmingSim* GameInstance = GetGameInstance();
+        if (GameInstance && GameInstance->DisasterManager)
+        {
+            GrowthRate *= GameInstance->DisasterManager->GetDisasterEffectOnCrop(CurrentCropType);
+        }
+        
+        // Apply farming skill bonus
+        AFarmingPlayerState* PlayerState = GetWorld()->GetFirstPlayerController()->GetPlayerState<AFarmingPlayerState>();
+        if (PlayerState)
+        {
+            GrowthRate *= PlayerState->GetSkillBonus(EFarmingSkill::Farming);
+        }
+        
+        // Apply water effectiveness
+        if (bIsWatered)
+        {
+            GrowthRate *= GetWaterEffectiveness();
+        }
+        else
+        {
+            GrowthRate *= 0.1f; // Very slow growth without water
+        }
+        
+        PlantedTime += DeltaTime * GrowthRate;
+        UpdateCropAppearance();
+    }
+}

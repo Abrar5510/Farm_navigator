@@ -53,4 +53,31 @@ private:
 
     void UpdateCropAppearance();
     class UFarmingSim* GetGameInstance() const;
+    
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Farming")
+    bool bIsWatered;
+
+    UFUNCTION(BlueprintCallable, Category = "Farming")
+    void WaterPlot();
+
+    UFUNCTION(BlueprintPure, Category = "Farming")
+    bool NeedsWater() const;
+
+    UFUNCTION(BlueprintPure, Category = "Farming")
+    float GetWaterEffectiveness() const;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Education")
+    class USoilHealthComponent* SoilHealthComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Education")
+    ESustainabilityPractice AppliedPractice;
+
+    UFUNCTION(BlueprintCallable, Category = "Education")
+    void ApplySustainablePractice(ESustainabilityPractice Practice);
+
+    UFUNCTION(BlueprintPure, Category = "Education")
+    FSustainabilityScore GetSustainabilityScore() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Education")
+    void RecordEducationalData();
 };
