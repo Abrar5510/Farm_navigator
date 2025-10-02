@@ -6,14 +6,16 @@ public class FarmingSimTarget : TargetRules
     public FarmingSimTarget(TargetInfo Target) : base(Target)
     {
         Type = TargetType.Game;
-        DefaultBuildSettings = BuildSettingsVersion.V2;
+        DefaultBuildSettings = BuildSettingsVersion.V5; // ← UPDATE TO V5
+        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_6; // ← UPDATE INCLUDE ORDER
+        
         ExtraModuleNames.Add("FarmingSim");
         
-        // REMOVE this line:
-        // bOverrideBuildEnvironment = true;
-        
         // Mac optimizations
-        bUseUnityBuild = false;
-        bUsePCHFiles = true;
+        if (Target.Platform == UnrealTargetPlatform.Mac)
+        {
+            bUseUnityBuild = false;
+            bUsePCHFiles = true;
+        }
     }
 }
