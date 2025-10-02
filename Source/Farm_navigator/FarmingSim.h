@@ -35,6 +35,21 @@ public:
     // Spend money
     UFUNCTION(BlueprintCallable, Category = "Economy")
     bool SpendMoney(int32 Amount);
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Education")
+    class AEducationalManager* EducationalManager;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Education")
+    class AWaterManagementSystem* WaterManagementSystem;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Disasters")
+    class ADisasterManager* DisasterManager;
+
+    UFUNCTION(BlueprintCallable, Category = "Education")
+    void CompleteLearningObjective(const FString& ObjectiveName);
+    
+    UFUNCTION(BlueprintCallable, Category = "Education")
+    void ShowSustainabilityReport();
 }; 
 
 #pragma once
