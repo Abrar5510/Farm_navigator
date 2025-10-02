@@ -1,4 +1,4 @@
-using UnrealBuildTool; 
+using UnrealBuildTool;
 using System.Collections.Generic;
 
 public class FarmingSimEditorTarget : TargetRules
@@ -8,7 +8,13 @@ public class FarmingSimEditorTarget : TargetRules
         Type = TargetType.Editor;
         DefaultBuildSettings = BuildSettingsVersion.V2;
         ExtraModuleNames.Add("FarmingSim");
-        bOverrideBuildEnvironment = true;
-        BuildEnvironment = TargetBuildEnvironment.Unique;
+        
+        // REMOVE these lines:
+        // bOverrideBuildEnvironment = true;
+        // BuildEnvironment = TargetBuildEnvironment.Unique;
+        
+        // Keep it simple for Mac
+        bUseUnityBuild = false;
+        bUsePCHFiles = true;
     }
 }
